@@ -1,25 +1,27 @@
 import React from "react";
-import {
-    View,
-    StyleSheet,
-    ImageBackground,
-    Image,
-    Text,
-    FlatList,
-    TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, ImageBackground, Image, Text, FlatList, TouchableOpacity, } from "react-native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+import { useNavigation } from "@react-navigation/native";
 
+
+interface QuadradoData {
+    id: string;
+    cor: string;
+    imagem: any;
+    nome: string;
+}
 const quadradosData = [
-    { id: "1", cor: "#FFF0B6", imagem: require("../../assets/lobo.png"), nome: "Imite um personagem do folclore" },
-    { id: "2", cor: "#FFF0B6", imagem: require("../../assets/saci2.png"), nome: "Volte três casas" },
-    { id: "3", cor: "#FFF0B6", imagem: require("../../assets/mula.png"), nome: "Volte duas casas" },
-    { id: "4", cor: "#FFF0B6", imagem: require("../../assets/saci3.png"), nome: "Fique uma rodada sem jogar" },
-    { id: "5", cor: "#FFF0B6", imagem: require("../../assets/boto.png"), nome: "Volte para o início" },
-    { id: "6", cor: "#FFF0B6", imagem: require("../../assets/lanca.png"), nome: "Conte uma lenda ou mito em 30s" },
+    { id: "1", cor: "#FFF0B6", imagem: require("../../assets/cuca.png"), nome: "Avance três casas" },
+    { id: "2", cor: "#FFF0B6", imagem: require("../../assets/boto.png"), nome: "Avance uma casa e jogue novamente" },
+    { id: "3", cor: "#FFF0B6", imagem: require("../../assets/iara.png"), nome: "Avande duas casas" },
+    { id: "4", cor: "#FFF0B6", imagem: require("../../assets/saci.png"), nome: "Avance uma casa" },
+    { id: "5", cor: "#FFF0B6", imagem: require("../../assets/lobo.png"), nome: "O próximo jogador fica sem jogar " },
+    { id: "6", cor: "#FFF0B6", imagem: require("../../assets/cachimbo.png"), nome: "Gire a roleta novamente" },
 ];
 
 const Tela9 = () => {
-    const renderQuadrado = ({ item }) => (
+    const renderQuadrado = ({ item }: { item: QuadradoData }) => (
         <View style={styles.quadradoWrapper}>
             <TouchableOpacity
                 style={[styles.quadrado, { backgroundColor: item.cor }]}
@@ -40,7 +42,7 @@ const Tela9 = () => {
                 <Image source={require("../../assets/Logo.png")} style={styles.logo} />
                 <Image source={require("../../assets/planta2.png")} style={styles.planta} />
 
-                <Text style={styles.titulo}>PRENDA</Text>
+                <Text style={styles.titulo}>BÔNUS</Text>
                 <Text style={styles.subtitulo}>Escolha o ícone que saiu na roleta</Text>
 
                 <FlatList
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 130,
         alignSelf: "center",
-        left: 130,
+        left: 120,
 
     },
 });

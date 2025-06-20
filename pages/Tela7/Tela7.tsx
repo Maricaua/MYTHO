@@ -1,10 +1,13 @@
 import React from "react";
-import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Text, Alert } from "react-native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-const Tela5 = () => {
-    const router = useRouter();
 
+const Tela7 = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
         <View style={styles.container}>
@@ -12,41 +15,50 @@ const Tela5 = () => {
                 source={require('../../assets/Background.png')}
                 style={styles.ImageBackground}
             >
+
+
+                <Image
+                    source={require('../../assets/Logo.png')}
+                    style={styles.logo} />
+
+                <Image
+                    source={require('../../assets/prenda.png')}
+                    style={styles.prenda} />
+
+
+                <TouchableOpacity
+                    style={styles.continuar}
+                    onPress={() =>
+                        Alert.alert(
+                            'Você já girou a roleta?',
+                            '',
+                            [
+                                {
+                                    text: 'Não',
+                                    style: 'cancel',
+                                    onPress: () => console.log('Usuário ainda não girou'),
+                                },
+                                {
+                                    text: 'Sim',
+                                    onPress: () => navigation.navigate('Tela8')
+                                },
+                            ],
+                            { cancelable: false }
+                        )
+                    }
+                >
+                    <Text style={styles.texto}>Continuar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Tela2')}>
+                    <Ionicons name="arrow-back-outline" size={30} color="white" />
+
+                </TouchableOpacity>
+
             </ImageBackground>
-
-            <Image
-                source={require('../../assets/Logo.png')}
-                style={styles.logo} />
-
-            <Image
-                source={require('../../assets/prenda.png')}
-                style={styles.bonus} />
-
-            <TouchableOpacity
-                style={styles.continuar}
-                onPress={() =>
-                    Alert.alert(
-                        'Você já girou a roleta?',
-                        '',
-                        [
-                            {
-                                text: 'Não',
-                                style: 'cancel',
-                                onPress: () => console.log('Usuário ainda não girou'),
-                            },
-                            {
-                                text: 'Sim',
-                                onPress: () => router.push('/Tela8') // substitua com a sua tela de destino
-                            },
-                        ],
-                        { cancelable: false }
-                    )
-                }
-            >
-                <Text style={styles.texto}>Continuar</Text>
-            </TouchableOpacity>
         </View>
     );
+
 };
 
 const styles = StyleSheet.create({
@@ -67,7 +79,7 @@ const styles = StyleSheet.create({
         top: 40,
         alignSelf: "center",
     },
-    bonus: {
+    prenda: {
         alignSelf: "center",
         top: 250,
         position: "absolute",
@@ -75,10 +87,11 @@ const styles = StyleSheet.create({
         width: 260,
     },
     continuar: {
-        backgroundColor: "#C1FF72",
+        backgroundColor: "#930100",
         width: "80%",
         height: 50,
         marginTop: 20,
+        
         borderRadius: 115,
         justifyContent: "center",
         alignItems: "center",
@@ -92,11 +105,18 @@ const styles = StyleSheet.create({
     },
     texto: {
         fontSize: 18,
-        color: "#000",
+        color: "#fff",
         fontWeight: "bold",
     },
-
+    back: {
+        position: 'absolute',
+        left: 20,
+        top: 0,
+        padding: 10,
+        marginTop: 15,
+        zIndex: 1,
+    },
 
 });
 
-export default Tela5;
+export default Tela7;

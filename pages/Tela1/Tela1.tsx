@@ -1,15 +1,12 @@
 import React from "react";
-import { useRouter } from "expo-router";
 import { View, StyleSheet, ImageBackground, Image, TouchableOpacity } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { AntDesign } from '@expo/vector-icons'; 
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from "../../App";
 
 const Tela1 = () => {
-  const router = useRouter();
-
-  const handlePress = () => {
-    console.log("Botão play clicado");
-    router.navigate("tela2");
-  };
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.container}>
@@ -22,8 +19,9 @@ const Tela1 = () => {
           style={styles.logo}
         />
 
-        <TouchableOpacity style={styles.play} onPress={handlePress}>
-        <AntDesign name="playcircleo" size={80} color="white" />
+        <TouchableOpacity style={styles.play} onPress={() => navigation.navigate('Tela2')}>
+          <AntDesign name="playcircleo" size={80} color="#C1FF72" />
+
         </TouchableOpacity>
       </ImageBackground>
     </View>
@@ -49,7 +47,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    resizeMode:"contain",
   }
 });
 

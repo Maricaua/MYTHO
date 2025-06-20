@@ -1,10 +1,12 @@
 import React from "react";
-import { useRouter,router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Text } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
 const Tela5 = () => {
-  const router = useRouter();
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
 
   return (
@@ -15,27 +17,26 @@ const Tela5 = () => {
       >
       </ImageBackground>
 
-      <Ionicons name="chevron-back" size={24} color="black" /> /* Ajuste */
 
       <Image
         source={require('../../assets/Logo.png')}
         style={styles.logo} />
 
       <View style={styles.pergunta}>
-        <Text style={{color: "#fff", fontSize: 18}}>Qual a região que surgiu o mito da sereia Iara?</Text>
+        <Text style={{ color: "#fff", fontSize: 18 }}>O que é a Boiuna?</Text>
       </View>
 
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.texto}>Norte</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Tela6')}>
+        <Text style={styles.texto}>Uma cobra gigante que vive nos rios</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button2}>
-        <Text style={styles.texto}>Leste</Text>
+      <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('Tela7')}>
+        <Text style={styles.texto}>Uma sereia que encanta os pescadores</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button3}>
-        <Text style={styles.texto}>Sul</Text>
+      <TouchableOpacity style={styles.button3} onPress={() => navigation.navigate('Tela7')}>
+        <Text style={styles.texto}>Um espírito da floresta que protege os animais</Text>
       </TouchableOpacity>
 
       <View style={styles.a} >

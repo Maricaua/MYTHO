@@ -1,22 +1,24 @@
 import React from "react";
 import { View, Image, Text, FlatList, ImageBackground, TouchableOpacity, StyleSheet, } from "react-native";
-import { router } from "expo-router";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Entypo from '@expo/vector-icons/Entypo';
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
 const casas = [5, 15, 25];
 
 export default function Tela3() {
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require('../../assets/Background.png')}
         style={styles.background}
       >
-        {/* Logo */}
         <Image source={require('../../assets/Logo.png')} style={styles.logo} />
 
-        {/* Cards das casas */}
         <FlatList
           data={casas}
           keyExtractor={(item) => item.toString()}
@@ -26,7 +28,7 @@ export default function Tela3() {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => router.navigate("Tela5")}
+              onPress={() => navigation.navigate("Tela5")}
             >
               {/* Estrelinha */}
               <Image source={require('../../assets/star.png')} style={styles.star} />
@@ -37,15 +39,10 @@ export default function Tela3() {
           )}
         />
 
-        <View style={styles.back}>
-          <Ionicons name="arrow-back-outline" size={30} color="black" />
-        </View>
+        <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Tela2')}>
+          <Ionicons name="arrow-back-outline" size={30} color="white" />
 
-        <View style={styles.home}>
-          <Entypo name="home" size={24} color="black" />
-        </View>
-
-
+        </TouchableOpacity>
       </ImageBackground>
     </View>
   );
@@ -66,12 +63,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   back: {
-    width: 50,
-    marginTop:50,  
-  },
-  home: {
-    alignItems: 'flex-end',
-    marginTop:50,
+    position: 'absolute',
+    left: 20,
+    top: 0,
+    padding: 10,
+    zIndex: 1,
 
   },
   cardList: {

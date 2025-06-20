@@ -1,9 +1,11 @@
 import React from "react";
-import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Text, Alert } from "react-native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
 const Tela6 = () => {
-    const router = useRouter();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
 
     return (
@@ -12,41 +14,43 @@ const Tela6 = () => {
                 source={require('../../assets/Background.png')}
                 style={styles.ImageBackground}
             >
+                <Image
+                    source={require('../../assets/Logo.png')}
+                    style={styles.logo}
+                />
+
+                <Image
+                    source={require('../../assets/bonus.png')}
+                    style={styles.bonus}
+                />
+
+                <TouchableOpacity
+                    style={styles.continuar}
+                    onPress={() =>
+                        Alert.alert(
+                            'Você já girou a roleta?',
+                            '',
+                            [
+                                {
+                                    text: 'Não',
+                                    style: 'cancel',
+                                    onPress: () => console.log('Usuário ainda não girou'),
+                                },
+                                {
+                                    text: 'Sim',
+                                    onPress: () => navigation.navigate('Tela9')
+                                },
+                            ],
+                            { cancelable: false }
+                        )
+                    }
+                >
+                    <Text style={styles.texto}>Continuar</Text>
+                </TouchableOpacity>
             </ImageBackground>
-
-            <Image
-                source={require('../../assets/Logo.png')}
-                style={styles.logo} />
-
-            <Image
-                source={require('../../assets/bonus.png')}
-                style={styles.bonus} />
-
-            <TouchableOpacity
-                style={styles.continuar}
-                onPress={() =>
-                    Alert.alert(
-                        'Você já girou a roleta?',
-                        '',
-                        [
-                            {
-                                text: 'Não',
-                                style: 'cancel',
-                                onPress: () => console.log('Usuário ainda não girou'),
-                            },
-                            {
-                                text: 'Sim',
-                                onPress: () => router.push('/Tela8') // substitua com a sua tela de destino
-                            },
-                        ],
-                        { cancelable: false }
-                    )
-                }
-            >
-                <Text style={styles.texto}>Continuar</Text>
-            </TouchableOpacity>
         </View>
     );
+
 };
 
 const styles = StyleSheet.create({
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
         width: 260,
     },
     continuar: {
-        backgroundColor: "#C1FF72",
+        backgroundColor: "#001493",
         width: "80%",
         height: 50,
         marginTop: 20,
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
     },
     texto: {
         fontSize: 18,
-        color: "#000",
+        color: "#fff",
         fontWeight: "bold",
     },
 
