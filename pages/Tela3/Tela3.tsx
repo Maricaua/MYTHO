@@ -5,12 +5,16 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 
+// Array de casas disponíveis
 const casas = [5, 15, 25];
 
 export default function Tela3() {
-
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  
+
+  const handleSelectCasa = (casaSelecionada: number) => {
+    navigation.navigate("Tela5", { selectedCasa: casaSelecionada });
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -28,9 +32,9 @@ export default function Tela3() {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => navigation.navigate("Tela5")}
+              onPress={() => handleSelectCasa(item)}
             >
-              {/* Estrelinha */}
+              {}
               <Image source={require('../../assets/star.png')} style={styles.star} />
 
               <Text style={styles.cardTitle}>CASA</Text>
@@ -41,7 +45,6 @@ export default function Tela3() {
 
         <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Tela2')}>
           <Ionicons name="arrow-back-outline" size={30} color="white" />
-
         </TouchableOpacity>
       </ImageBackground>
     </View>
@@ -68,7 +71,6 @@ const styles = StyleSheet.create({
     top: 0,
     padding: 10,
     zIndex: 1,
-
   },
   cardList: {
     paddingBottom: 100,
@@ -99,5 +101,4 @@ const styles = StyleSheet.create({
     top: -10,
     right: -10,
   },
-
 });

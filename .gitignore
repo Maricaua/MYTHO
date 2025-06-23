@@ -1,35 +1,45 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
-node_modules/
-
-# Expo
+# Expo (arquivos de cache e build do Expo)
 .expo/
-dist/
 web-build/
 
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# Variáveis de ambiente (dados sensíveis/locais)
+.env
+.env.*
 
-# Metro
-.metro-health-check*
+# Metro Bundler (cache do empacotador do React Native)
+.metro/
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
+# Node.js (pasta onde as dependências são instaladas)
+node_modules/
 
-# macOS
+# npm (logs de depuração)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS (arquivos de sistema ocultos)
 .DS_Store
-*.pem
 
-# local env files
-.env*.local
+# Windows (arquivos de sistema ocultos)
+Thumbs.db
 
-# typescript
-*.tsbuildinfo
+# VS Code (configurações específicas do editor)
+.vscode/
+
+# Gradle (cache e builds do Android)
+android/.gradle/
+android/build/
+android/app/build/
+
+# iOS (builds do iOS)
+ios/build/
+ios/.symlinks/
+
+# Arquivos de depuração do Firebase
+firebase-debug.log
+firebase-debug.log.json
+
+# Arquivos gerados (APKs, AABs, IPAs)
+*.apk
+*.aab
+*.ipa

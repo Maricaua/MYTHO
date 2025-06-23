@@ -1,20 +1,24 @@
 import React from "react";
-import { View, StyleSheet, ImageBackground, Image, Text, FlatList, TouchableOpacity, } from "react-native";
+import { View, StyleSheet, ImageBackground, Image, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from '../../App';
-import { useNavigation } from "@react-navigation/native";
+import { ref, set } from 'firebase/database'; 
+
+import { db } from '../../src/firebaseConfig'; 
 
 interface QuadradoData {
     id: string;
     cor: string;
     imagem: any;
     nome: string;
+    valorPrenda?: number;
 }
 
-const quadradosData = [
+const quadradosData: QuadradoData[] = [
     { id: "1", cor: "#FFF0B6", imagem: require("../../assets/lobo.png"), nome: "Imite um personagem de folclore" },
-    { id: "2", cor: "#FFF0B6", imagem: require("../../assets/saci.png"), nome: "Volte três casas" },
-    { id: "3", cor: "#FFF0B6", imagem: require("../../assets/mula.png"), nome: "Volte duas casas" },
+    { id: "2", cor: "#FFF0B6", imagem: require("../../assets/saci.png"), nome: "Volte três casas", valorPrenda: 3 },
+    { id: "3", cor: "#FFF0B6", imagem: require("../../assets/mula.png"), nome: "Volte duas casas", valorPrenda: 2 },
     { id: "4", cor: "#FFF0B6", imagem: require("../../assets/saci2.png"), nome: "Fique uma rodada sem jogar" },
     { id: "5", cor: "#FFF0B6", imagem: require("../../assets/boto.png"), nome: "Volte para o início" },
     { id: "6", cor: "#FFF0B6", imagem: require("../../assets/lanca.png"), nome: "Conte uma lenda ou mito em 30s" },
@@ -22,12 +26,34 @@ const quadradosData = [
 
 const Tela8 = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'Tela8'>>();
+    const { selectedCasa } = route.params || { selectedCasa: null };
+
+    const updatePrenda = async (valor: number) => {
+        if (selectedCasa === null) {
+            Alert.alert("Erro", "Nenhuma casa selecionada. Volte e selecione uma casa.");
+            return;
+        }
+
+        try {
+            const dbRef = ref(db, `Disparos/Casa${selectedCasa}_Prenda`);
+            await set(dbRef, valor); 
+        } catch (error) {
+            console.error("Erro ao atualizar a prenda no Firebase:", error);
+            Alert.alert("Erro", "Não foi possível atualizar a prenda. Verifique sua conexão ou as regras do Firebase.");
+        }
+    };
 
     const renderQuadrado = ({ item }: { item: QuadradoData }) => (
         <View style={styles.quadradoWrapper}>
             <TouchableOpacity
                 style={[styles.quadrado, { backgroundColor: item.cor }]}
-                onPress={() => console.log(`Clicou no quadrado ${item.id}`)}
+                onPress={() => {
+                    if (item.valorPrenda !== undefined) {
+                        updatePrenda(item.valorPrenda);
+                    }
+                    console.log(`Clicou no quadrado ${item.id} - ${item.nome}`);
+                }}
             >
                 <Image source={item.imagem} style={styles.imagemIcone} />
             </TouchableOpacity>
@@ -38,11 +64,15 @@ const Tela8 = () => {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require("../../assets/Background.png")}
+                source={require("../../assets/Background.png")} 
                 style={styles.ImageBackground}
             >
-                <Image source={require("../../assets/Logo.png")} style={styles.logo} />
-                <Image source={require("../../assets/planta2.png")} style={styles.planta} />
+                <Image source={require("../../assets/Logo.png")} style={styles.logo} /> {}
+                <Image source={require("../../assets/planta2.png")} style={styles.planta} /> {}
+
+                {selectedCasa !== null && (
+                    <Text style={styles.debugText}>Casa selecionada: {selectedCasa}</Text>
+                )}
 
                 <Text style={styles.titulo}>PRENDA</Text>
                 <Text style={styles.subtitulo}>Escolha o ícone que saiu na roleta</Text>
@@ -129,7 +159,14 @@ const styles = StyleSheet.create({
         top: 130,
         alignSelf: "center",
         left: 110,
-
+    },
+    debugText: {
+        color: '#fff',
+        fontSize: 14,
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 10,
     },
 });
 

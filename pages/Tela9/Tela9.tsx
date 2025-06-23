@@ -1,31 +1,63 @@
 import React from "react";
-import { View, StyleSheet, ImageBackground, Image, Text, FlatList, TouchableOpacity, } from "react-native";
+import { View, StyleSheet, ImageBackground, Image, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from '../../App';
-import { useNavigation } from "@react-navigation/native";
+import { ref, set } from 'firebase/database'; // Importar ref e SET do Firebase
 
+// Caminho de importação CONFIRMADO para o firebaseConfig.js
+// Sobe dois níveis (de TelaX para MYTHO), e então entra na pasta src
+import { db } from '../../src/firebaseConfig'; 
 
 interface QuadradoData {
     id: string;
     cor: string;
     imagem: any;
     nome: string;
+    valorBonificacao?: number;
 }
-const quadradosData = [
-    { id: "1", cor: "#FFF0B6", imagem: require("../../assets/cuca.png"), nome: "Avance três casas" },
-    { id: "2", cor: "#FFF0B6", imagem: require("../../assets/boto.png"), nome: "Avance uma casa e jogue novamente" },
-    { id: "3", cor: "#FFF0B6", imagem: require("../../assets/iara.png"), nome: "Avande duas casas" },
-    { id: "4", cor: "#FFF0B6", imagem: require("../../assets/saci.png"), nome: "Avance uma casa" },
+
+const quadradosData: QuadradoData[] = [
+    // Caminhos das imagens CONFIRMADOS: Sobe dois níveis (de TelaX para MYTHO), e então entra na pasta assets
+    { id: "1", cor: "#FFF0B6", imagem: require("../../assets/cuca.png"), nome: "Avance três casas", valorBonificacao: 3 },
+    // MODIFICAÇÃO AQUI: "Avance uma casa e jogue novamente" agora tem valorBonificacao: 1
+    { id: "2", cor: "#FFF0B6", imagem: require("../../assets/boto.png"), nome: "Avance uma casa e jogue novamente", valorBonificacao: 1 },
+    { id: "3", cor: "#FFF0B6", imagem: require("../../assets/iara.png"), nome: "Avance duas casas", valorBonificacao: 2 },
+    { id: "4", cor: "#FFF0B6", imagem: require("../../assets/saci.png"), nome: "Avance uma casa", valorBonificacao: 1 },
     { id: "5", cor: "#FFF0B6", imagem: require("../../assets/lobo.png"), nome: "O próximo jogador fica sem jogar " },
     { id: "6", cor: "#FFF0B6", imagem: require("../../assets/cachimbo.png"), nome: "Gire a roleta novamente" },
 ];
 
 const Tela9 = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'Tela9'>>();
+    const { selectedCasa } = route.params || { selectedCasa: null };
+
+    const updateBonificacao = async (valor: number) => {
+        if (selectedCasa === null) {
+            Alert.alert("Erro", "Nenhuma casa selecionada. Volte e selecione uma casa.");
+            return;
+        }
+
+        try {
+            const dbRef = ref(db, `Disparos/Casa${selectedCasa}_Bonificacao`);
+            await set(dbRef, valor); // Usando SET para sobrescrever o valor
+        } catch (error) {
+            console.error("Erro ao atualizar a bonificação no Firebase:", error);
+            Alert.alert("Erro", "Não foi possível atualizar a bonificação. Verifique sua conexão ou as regras do Firebase.");
+        }
+    };
+
     const renderQuadrado = ({ item }: { item: QuadradoData }) => (
         <View style={styles.quadradoWrapper}>
             <TouchableOpacity
                 style={[styles.quadrado, { backgroundColor: item.cor }]}
-                onPress={() => console.log(`Clicou no quadrado ${item.id}`)}
+                onPress={() => {
+                    if (item.valorBonificacao !== undefined) {
+                        updateBonificacao(item.valorBonificacao);
+                    }
+                    console.log(`Clicou no quadrado ${item.id} - ${item.nome}`);
+                }}
             >
                 <Image source={item.imagem} style={styles.imagemIcone} />
             </TouchableOpacity>
@@ -36,11 +68,15 @@ const Tela9 = () => {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require("../../assets/Background.png")}
+                source={require("../../assets/Background.png")} // Este caminho já estava correto
                 style={styles.ImageBackground}
             >
-                <Image source={require("../../assets/Logo.png")} style={styles.logo} />
-                <Image source={require("../../assets/planta2.png")} style={styles.planta} />
+                <Image source={require("../../assets/Logo.png")} style={styles.logo} /> {/* Este caminho já estava correto */}
+                <Image source={require("../../assets/planta2.png")} style={styles.planta} /> {/* Este caminho já estava correto */}
+
+                {selectedCasa !== null && (
+                    <Text style={styles.debugText}>Casa selecionada: {selectedCasa}</Text>
+                )}
 
                 <Text style={styles.titulo}>BÔNUS</Text>
                 <Text style={styles.subtitulo}>Escolha o ícone que saiu na roleta</Text>
@@ -127,7 +163,14 @@ const styles = StyleSheet.create({
         top: 130,
         alignSelf: "center",
         left: 120,
-
+    },
+    debugText: {
+        color: '#fff',
+        fontSize: 14,
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 10,
     },
 });
 

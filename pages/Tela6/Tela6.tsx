@@ -1,12 +1,40 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { View, StyleSheet, ImageBackground, Image, TouchableOpacity, Text, Alert } from "react-native";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../App'; 
+
+type Tela6RouteProp = RouteProp<RootStackParamList, 'Tela6'>;
 
 const Tela6 = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const route = useRoute<Tela6RouteProp>();
 
+    const { selectedCasa } = route.params || { selectedCasa: null };
+
+    const handleContinue = () => {
+        if (selectedCasa === null) {
+            Alert.alert("Erro", "Casa não selecionada. Por favor, volte e escolha uma casa novamente.");
+            return;
+        }
+
+        Alert.alert(
+            'Você já girou a roleta?',
+            '',
+            [
+                {
+                    text: 'Não',
+                    style: 'cancel',
+                    onPress: () => console.log('Usuário ainda não girou'),
+                },
+                {
+                    text: 'Sim',
+                    onPress: () => navigation.navigate('Tela9', { selectedCasa: selectedCasa })
+                },
+            ],
+            { cancelable: false }
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -24,33 +52,20 @@ const Tela6 = () => {
                     style={styles.bonus}
                 />
 
+                {}
+                {selectedCasa !== null && (
+                    <Text style={styles.selectedCasaText}>Casa Selecionada: {selectedCasa}</Text>
+                )}
+
                 <TouchableOpacity
                     style={styles.continuar}
-                    onPress={() =>
-                        Alert.alert(
-                            'Você já girou a roleta?',
-                            '',
-                            [
-                                {
-                                    text: 'Não',
-                                    style: 'cancel',
-                                    onPress: () => console.log('Usuário ainda não girou'),
-                                },
-                                {
-                                    text: 'Sim',
-                                    onPress: () => navigation.navigate('Tela9')
-                                },
-                            ],
-                            { cancelable: false }
-                        )
-                    }
+                    onPress={handleContinue} 
                 >
                     <Text style={styles.texto}>Continuar</Text>
                 </TouchableOpacity>
             </ImageBackground>
         </View>
     );
-
 };
 
 const styles = StyleSheet.create({
@@ -92,15 +107,20 @@ const styles = StyleSheet.create({
         top: 670,
         zIndex: 10,
         left: "10%",
-
     },
     texto: {
         fontSize: 18,
         color: "#fff",
         fontWeight: "bold",
     },
-
-
+    selectedCasaText: { 
+        position: 'absolute',
+        top: 100, 
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        zIndex: 10,
+    },
 });
 
 export default Tela6;

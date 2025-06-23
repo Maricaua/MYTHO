@@ -30,11 +30,11 @@ export type RootStackParamList ={
   Tela2: undefined;
   Tela3: undefined;
   Tela4: undefined;
-  Tela5: undefined;
-  Tela6: undefined;
-  Tela7: undefined;
-  Tela8: undefined;
-  Tela9: undefined;
+  Tela5: { selectedCasa: number };
+  Tela6: { selectedCasa: number };
+  Tela7: { selectedCasa: number };
+  Tela8: { selectedCasa: number };
+  Tela9: { selectedCasa: number };
   Tela10: undefined;
   Tela11: undefined;
   Tela12: undefined;
